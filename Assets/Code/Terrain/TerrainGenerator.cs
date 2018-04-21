@@ -94,6 +94,40 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
+    private MeshCollider meshCollider;
+
+    private MeshCollider MeshCollider
+    {
+        get
+        {
+            if (meshCollider == null)
+            {
+                meshCollider = GetComponentInChildren<MeshCollider>();
+                if (meshCollider == null)
+                {
+                    meshCollider = InitColliderObject();
+                }
+            }
+            return meshCollider;
+        }
+    }
+
+    private MeshCollider InitColliderObject()
+    {
+        var colliderObject = new GameObject
+        {
+            name = "Collider",
+        };
+        colliderObject.transform.parent = transform;
+
+        // Move the collider object up to ensure that it doesn't intersect with the visual
+        // mesh.
+        colliderObject.transform.position += Vector3.up * 1.2f;
+
+        var collider = colliderObject.AddComponent<MeshCollider>();
+        return collider;
+    }
+
     /// <summary>
     /// Ensure the game object is set up correctly.
     /// </summary>
@@ -158,22 +192,35 @@ public class TerrainGenerator : MonoBehaviour
     [ContextMenu("Update mesh")]
     private void UpdateMesh()
     {
-        var mesh = MeshFilter.mesh = new Mesh();
-
-        mesh.name = "TerrainChunk";
-
-        mesh.vertices = GenerateVerts(Size, posX, posY, weightings, scale);
-
-        mesh.triangles = GenerateTris(Size, posX, posY, weightings, scale);
-
-        mesh.uv = Enumerable.Range(0, Size)
-            .SelectMany(i => Enumerable.Range(0, Size)
-                .Select(j => new Vector2((float)i / Size, (float)j / Size)
-            ))
-            .ToArray();
+        var mesh = MeshFilter.mesh = new Mesh
+        {
+            name = "TerrainChunk",
+            vertices = GenerateVerts(Size, posX, posY, weightings, scale),
+            triangles = GenerateTris(Size, posX, posY, weightings, scale),
+            uv = Enumerable.Range(0, Size)
+                .SelectMany(i => Enumerable.Range(0, Size)
+                    .Select(j => new Vector2((float)i / Size, (float)j / Size)
+                ))
+                .ToArray()
+        };
 
         mesh.RecalculateNormals();
+
+        UpdateCollider();
     }
+
+    private void UpdateCollider()
+    {
+        var mesh = new Mesh
+        {
+            name = "TerrainCollider",
+            vertices = GenerateVerts(17, posX, posY, weightings, scale),
+            triangles = GenerateTris(17, posX, posY, weightings, scale)
+        };
+
+        MeshCollider.sharedMesh = mesh;
+    }
+
 
     private static int TerrainResolutionToSize(TerrainResolution res)
     {
