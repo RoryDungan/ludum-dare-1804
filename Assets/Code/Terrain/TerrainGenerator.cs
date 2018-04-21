@@ -18,6 +18,7 @@ public class TerrainGenerator : MonoBehaviour
         Resolution_65,
         Resolution_33,
         Resolution_17,
+        Resolution_9
     }
 
     [SerializeField]
@@ -168,6 +169,10 @@ public class TerrainGenerator : MonoBehaviour
 
             switch (meshResolution)
             {
+                case TerrainResolution.Resolution_9:
+                    size = 9;
+                    break;
+
                 case TerrainResolution.Resolution_17:
                     size = 17;
                     break;
