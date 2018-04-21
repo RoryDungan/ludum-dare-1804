@@ -24,6 +24,22 @@ public class TerrainGenerator : MonoBehaviour
     private TerrainResolution cachedMeshResolution;
 
     /// <summary>
+    /// The X position of this chunk in the world grid.
+    /// </summary>
+    [SerializeField]
+    private int posX;
+
+    private int cachedPosX;
+
+    /// <summary>
+    /// The Y position of this chunk in the world grid.
+    /// </summary>
+    [SerializeField]
+    private int posY;
+
+    private int cachedPosY;
+
+    /// <summary>
     /// Size of terrrain chunk meshes.
     /// </summary>
     private int size = 256;
@@ -86,11 +102,11 @@ public class TerrainGenerator : MonoBehaviour
         gameObject.isStatic = true;
     }
 
-    private float Perlin(int x, int y, IEnumerable<Weighting> weightings, int size)
+    private float Perlin(float x, float y, IEnumerable<Weighting> weightings)
     {
         return weightings.Aggregate(
             0f,
-            (acc, w) => acc + Mathf.PerlinNoise((float)x / size * w.Level, (float)y / size * w.Level) * w.Weight
+            (acc, w) => acc + Mathf.PerlinNoise(x * w.Level, y * w.Level) * w.Weight
         );
     }
 
@@ -103,11 +119,10 @@ public class TerrainGenerator : MonoBehaviour
 
         mesh.vertices = Enumerable.Range(0, size)
             .SelectMany(i => Enumerable.Range(0, size)
-                //.Select(j => new Vector3(i, Random.Range(0, 1) * 10, j) // TODO: take y from perlin noise
                 .Select(j => new Vector3(
-                    i * scale.x / size, 
-                    scale.y * Perlin(i, j, weightings, size), 
-                    j * scale.z / size
+                    i * scale.x / (size - 1), 
+                    scale.y * Perlin((float)i / size + posX, (float)j / size + posY, weightings), 
+                    j * scale.z / (size - 1)
                 ) 
             ))
             .ToArray();
@@ -143,6 +158,7 @@ public class TerrainGenerator : MonoBehaviour
             cachedScale = scale;
             dirty = true;
         }
+
         if (meshResolution != cachedMeshResolution)
         {
             cachedMeshResolution = meshResolution;
@@ -191,6 +207,18 @@ public class TerrainGenerator : MonoBehaviour
         {
             dirty = true;
             cachedWeightings = (Weighting[])weightings.Clone();
+        }
+
+        if (posX != cachedPosX)
+        {
+            dirty = true;
+            cachedPosX = posX;
+        }
+
+        if (posY != cachedPosY)
+        {
+            dirty = true;
+            cachedPosY = posY;
         }
 
         if (dirty)
