@@ -45,7 +45,7 @@ public class TerrainGenerator : MonoBehaviour
     /// <summary>
     /// Size of terrrain chunk meshes.
     /// </summary>
-    private int size = 256;
+    private int Size { get { return TerrainResolutionToSize(meshResolution); } }
 
     [SerializeField]
     private Vector3 scale = Vector3.one;
@@ -105,7 +105,7 @@ public class TerrainGenerator : MonoBehaviour
         gameObject.isStatic = true;
     }
 
-    private float Perlin(float x, float y, IEnumerable<Weighting> weightings)
+    private static float Perlin(float x, float y, IEnumerable<Weighting> weightings)
     {
         return weightings.Aggregate(
             0f,
@@ -113,14 +113,15 @@ public class TerrainGenerator : MonoBehaviour
         );
     }
 
-    [ContextMenu("Update mesh")]
-    private void UpdateMesh()
+    private static Vector3[] GenerateVerts(
+        int size, 
+        int posX, 
+        int posY, 
+        IEnumerable<Weighting> weightings,
+        Vector3 scale
+    )
     {
-        var mesh = MeshFilter.mesh = new Mesh();
-
-        mesh.name = "TerrainChunk";
-
-        mesh.vertices = Enumerable.Range(0, size)
+        return Enumerable.Range(0, size)
             .SelectMany(i => Enumerable.Range(0, size)
                 .Select(j => new Vector3(
                     i * scale.x / (size - 1),
@@ -129,8 +130,17 @@ public class TerrainGenerator : MonoBehaviour
                 ))
             )
             .ToArray();
+    }
 
-        mesh.triangles = Enumerable.Range(0, size - 1)
+    private static int[] GenerateTris(
+        int size,
+        int posX,
+        int posY,
+        IEnumerable<Weighting> weightings,
+        Vector3 scale
+    )
+    {
+        return Enumerable.Range(0, size - 1)
             .SelectMany(i => Enumerable.Range(0, size - 1)
                 .SelectMany(j => new[] {
                     i * size + j,
@@ -143,14 +153,51 @@ public class TerrainGenerator : MonoBehaviour
                 })
             )
             .ToArray();
+    }
 
-        mesh.uv = Enumerable.Range(0, size)
-            .SelectMany(i => Enumerable.Range(0, size)
-                .Select(j => new Vector2((float)i / size, (float)j / size)
+    [ContextMenu("Update mesh")]
+    private void UpdateMesh()
+    {
+        var mesh = MeshFilter.mesh = new Mesh();
+
+        mesh.name = "TerrainChunk";
+
+        mesh.vertices = GenerateVerts(Size, posX, posY, weightings, scale);
+
+        mesh.triangles = GenerateTris(Size, posX, posY, weightings, scale);
+
+        mesh.uv = Enumerable.Range(0, Size)
+            .SelectMany(i => Enumerable.Range(0, Size)
+                .Select(j => new Vector2((float)i / Size, (float)j / Size)
             ))
             .ToArray();
 
         mesh.RecalculateNormals();
+    }
+
+    private static int TerrainResolutionToSize(TerrainResolution res)
+    {
+        switch (res)
+        {
+            case TerrainResolution.Resolution_9:
+                return 9;
+
+            case TerrainResolution.Resolution_17:
+                return 17;
+
+            case TerrainResolution.Resolution_33:
+                return 33;
+
+            case TerrainResolution.Resolution_65:
+                return 65;
+
+            case TerrainResolution.Resolution_129:
+                return 129;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    
     }
 
     private void Update()
@@ -166,32 +213,6 @@ public class TerrainGenerator : MonoBehaviour
         {
             cachedMeshResolution = meshResolution;
             dirty = true;
-
-            switch (meshResolution)
-            {
-                case TerrainResolution.Resolution_9:
-                    size = 9;
-                    break;
-
-                case TerrainResolution.Resolution_17:
-                    size = 17;
-                    break;
-
-                case TerrainResolution.Resolution_33:
-                    size = 33;
-                    break;
-
-                case TerrainResolution.Resolution_65:
-                    size = 65;
-                    break;
-
-                case TerrainResolution.Resolution_129:
-                    size = 129;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         if (weightings != null && cachedWeightings != null && weightings.Length == cachedWeightings.Length)
