@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -35,12 +36,22 @@ public class TerrainGenerator : MonoBehaviour
     private int cachedPosX;
 
     /// <summary>
+    /// The X position of this chunk in the world grid.
+    /// </summary>
+    public int PosX { get { return posX; } set { posX = value; } }
+
+    /// <summary>
     /// The Y position of this chunk in the world grid.
     /// </summary>
     [SerializeField]
     private int posY;
 
     private int cachedPosY;
+
+    /// <summary>
+    /// The Y position of this chunk in the world grid.
+    /// </summary>
+    public int PosY { get { return posY; } set { posY = value; } }
 
     /// <summary>
     /// Size of terrrain chunk meshes.
@@ -50,9 +61,12 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField]
     private Vector3 scale = Vector3.one;
 
-    private Vector3 cachedScale;
+    /// <summary>
+    /// The size of the resulting terrain object.
+    /// </summary>
+    public Vector3 Scale { get { return scale; } set { scale = value; } }
 
-    private bool dirty = true;
+    private Vector3 cachedScale;
 
     [Serializable]
     struct Weighting : IEquatable<Weighting>
@@ -77,6 +91,9 @@ public class TerrainGenerator : MonoBehaviour
     };
 
     private Weighting[] cachedWeightings;
+
+    [SerializeField]
+    private bool autoUpdate = false;
 
 
     private MeshFilter meshFilter;
@@ -139,31 +156,40 @@ public class TerrainGenerator : MonoBehaviour
         gameObject.isStatic = true;
     }
 
-    private static float Perlin(float x, float y, IEnumerable<Weighting> weightings)
+    private static float Perlin(float x, float y, Weighting[] weightings)
     {
-        return weightings.Aggregate(
-            0f,
-            (acc, w) => acc + Mathf.PerlinNoise(x * w.Level, y * w.Level) * w.Weight
-        );
+        var acc = 0f;
+        for (var i = 0; i < weightings.Length; i++)
+        {
+            acc += Mathf.PerlinNoise(x * weightings[i].Level, y * weightings[i].Level) * weightings[i].Weight;
+        }
+        return acc;
     }
 
     private static Vector3[] GenerateVerts(
         int size, 
         int posX, 
         int posY, 
-        IEnumerable<Weighting> weightings,
+        Weighting[] weightings,
         Vector3 scale
     )
     {
-        return Enumerable.Range(0, size)
-            .SelectMany(i => Enumerable.Range(0, size)
-                .Select(j => new Vector3(
-                    i * scale.x / (size - 1),
-                    scale.y * Perlin((float)i / (size - 1) + posX, (float)j / (size - 1) + posY, weightings),
-                    j * scale.z / (size - 1)
-                ))
-            )
-            .ToArray();
+        var v = new Vector3[size * size];
+        for (var i = 0; i < size; i++)
+        {
+            for (var j = 0; j < size; j++)
+            {
+                v[i * size + j].x = 
+                    i * scale.x / (size - 1);
+
+                v[i * size + j].y =
+                    scale.y * Perlin((float)i / (size - 1) + posX, (float)j / (size - 1) + posY, weightings);
+
+                v[i * size + j].z = 
+                    j * scale.z / (size - 1);
+            }
+        }
+        return v;
     }
 
     private static int[] GenerateTris(
@@ -174,39 +200,62 @@ public class TerrainGenerator : MonoBehaviour
         Vector3 scale
     )
     {
-        return Enumerable.Range(0, size - 1)
-            .SelectMany(i => Enumerable.Range(0, size - 1)
-                .SelectMany(j => new[] {
-                    i * size + j,
-                    i * size + j + 1,
-                    i * size + j + size,
+        var total = size - 1;
 
-                    i * size + j + 1,
-                    i * size + j + size + 1,
-                    i * size + j + size
-                })
-            )
-            .ToArray();
+        var tris = new int[total * total * 6];
+        for (var i = 0; i < total; i++)
+        {
+            for (var j = 0; j < total; j++)
+            {
+                var idx = i * total * 6 + j * 6;
+                tris[idx] = i * size + j;
+
+                tris[idx + 1] = i * size + j + 1;
+                tris[idx + 2] = i * size + j + size;
+                tris[idx + 3] = i * size +j + 1;
+                tris[idx + 4] = i * size + j + size + 1;
+                tris[idx + 5] = i * size + j + size;
+            }
+        }
+
+        return tris;
+    }
+
+    private static Vector2[] GenerateUVs(int size)
+    {
+        var uvs = new Vector2[size * size];
+        for (var i = 0; i < size; i++)
+        {
+            for (var j = 0; j < size; j++)
+            {
+                uvs[i * size + j].x = (float)i / size;
+                uvs[i * size + j].y = (float)j / size;
+            }
+        }
+
+        return uvs;
     }
 
     [ContextMenu("Update mesh")]
-    private void UpdateMesh()
+    public void UpdateMesh()
     {
+        //var sw = new Stopwatch();
+        //sw.Start();
+
         var mesh = MeshFilter.mesh = new Mesh
         {
             name = "TerrainChunk",
             vertices = GenerateVerts(Size, posX, posY, weightings, scale),
             triangles = GenerateTris(Size, posX, posY, weightings, scale),
-            uv = Enumerable.Range(0, Size)
-                .SelectMany(i => Enumerable.Range(0, Size)
-                    .Select(j => new Vector2((float)i / Size, (float)j / Size)
-                ))
-                .ToArray()
+            uv = GenerateUVs(Size)
         };
 
         mesh.RecalculateNormals();
 
         UpdateCollider();
+
+        //sw.Stop();
+        //UnityEngine.Debug.Log("UpdateMesh: " + sw.ElapsedMilliseconds + "ms");
     }
 
     private void UpdateCollider()
@@ -249,6 +298,18 @@ public class TerrainGenerator : MonoBehaviour
 
     private void Update()
     {
+        if (!autoUpdate)
+        {
+            return;
+        }
+
+        var dirty = false;
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            dirty = true;
+        }
+
         // Check dirty
         if (scale != cachedScale)
         {
