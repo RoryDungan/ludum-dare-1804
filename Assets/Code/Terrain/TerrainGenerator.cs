@@ -4,6 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+/// <summary>
+/// Generates terrain on the attached MeshFilter
+/// </summary>
 [RequireComponent(typeof(MeshFilter))]
 [ExecuteInEditMode]
 public class TerrainGenerator : MonoBehaviour
@@ -11,7 +14,6 @@ public class TerrainGenerator : MonoBehaviour
     // Enum so that it can be easily shown in the inspector.
     enum TerrainResolution
     {
-        Resolution_257,
         Resolution_129,
         Resolution_65,
         Resolution_33,
@@ -19,7 +21,7 @@ public class TerrainGenerator : MonoBehaviour
     }
 
     [SerializeField]
-    private TerrainResolution meshResolution = TerrainResolution.Resolution_257;
+    private TerrainResolution meshResolution = TerrainResolution.Resolution_129;
 
     private TerrainResolution cachedMeshResolution;
 
@@ -66,11 +68,11 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField]
     private Weighting[] weightings = new[]
     { 
-        new Weighting { Level = 4, Weight = 100f },
+        new Weighting { Level = 4, Weight = 200f },
         new Weighting { Level = 8, Weight = 50f },
         new Weighting { Level = 16, Weight = 20f },
-        new Weighting { Level = 32, Weight = 10f },
-        new Weighting { Level = 64, Weight = 5f }, 
+        new Weighting { Level = 32, Weight = 5f },
+        new Weighting { Level = 64, Weight = 3f }, 
     };
 
     private Weighting[] cachedWeightings;
@@ -180,10 +182,6 @@ public class TerrainGenerator : MonoBehaviour
 
                 case TerrainResolution.Resolution_129:
                     size = 129;
-                    break;
-
-                case TerrainResolution.Resolution_257:
-                    size = 257;
                     break;
 
                 default:
