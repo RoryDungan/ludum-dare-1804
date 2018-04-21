@@ -1,15 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 [RequireComponent(typeof(MeshFilter))]
+[ExecuteInEditMode]
 public class TerrainGenerator : MonoBehaviour
 {
+    // Enum so that it can be easily shown in the inspector.
+    enum TerrainResolution
+    {
+        Resolution_256,
+        Resolution_128,
+        Resolution_64,
+    }
+
+    [SerializeField]
+    private TerrainResolution meshResolution = TerrainResolution.Resolution_256;
+
+    private TerrainResolution cachedMeshResolution;
+
     /// <summary>
     /// Size of terrrain chunk meshes.
     /// </summary>
-    private const int size = 256;
+    private int size = 256;
+
+    [SerializeField]
+    private Vector3 scale = Vector3.one;
+
+    private Vector3 cachedScale;
+
+    private bool dirty = true;
+
+
 
     private MeshFilter meshFilter;
 
@@ -45,6 +69,45 @@ public class TerrainGenerator : MonoBehaviour
         );
     }
 
+    private void Update()
+    {
+        // Check dirty
+        if (scale != cachedScale)
+        {
+            cachedScale = scale;
+            dirty = true;
+        }
+        if (meshResolution != cachedMeshResolution)
+        {
+            cachedMeshResolution = meshResolution;
+            dirty = true;
+
+            switch (meshResolution)
+            {
+                case TerrainResolution.Resolution_64:
+                    size = 64;
+                    break;
+
+                case TerrainResolution.Resolution_128:
+                    size = 128;
+                    break;
+
+                case TerrainResolution.Resolution_256:
+                    size = 256;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        if (dirty)
+        {
+            UpdateMesh();
+            dirty = false;
+        }
+    }
+
     [ContextMenu("Update mesh")]
     private void UpdateMesh()
     {
@@ -65,7 +128,11 @@ public class TerrainGenerator : MonoBehaviour
         mesh.vertices = Enumerable.Range(0, size)
             .SelectMany(i => Enumerable.Range(0, size)
                 //.Select(j => new Vector3(i, Random.Range(0, 1) * 10, j) // TODO: take y from perlin noise
-                .Select(j => new Vector3(i, Perlin(i, j, weightings, size), j) // TODO: take y from perlin noise
+                .Select(j => new Vector3(
+                    i * scale.x / size, 
+                    scale.y * Perlin(i, j, weightings, size), 
+                    j * scale.z / size
+                ) 
             ))
             .ToArray();
 
