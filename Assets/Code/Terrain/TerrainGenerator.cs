@@ -14,6 +14,8 @@ public class TerrainGenerator : MonoBehaviour
         Resolution_256,
         Resolution_128,
         Resolution_64,
+        Resolution_32,
+        Resolution_16,
     }
 
     [SerializeField]
@@ -33,6 +35,29 @@ public class TerrainGenerator : MonoBehaviour
 
     private bool dirty = true;
 
+    [Serializable]
+    struct Weighting : IEquatable<Weighting>
+    {
+        public int Level;
+        public float Weight;
+
+        public bool Equals(Weighting other)
+        {
+            return Level == other.Level && Weight == other.Weight;
+        }
+    }
+
+    [SerializeField]
+    private Weighting[] weightings = new[]
+    { 
+        new Weighting { Level = 4, Weight = 100f },
+        new Weighting { Level = 8, Weight = 50f },
+        new Weighting { Level = 16, Weight = 20f },
+        new Weighting { Level = 32, Weight = 10f },
+        new Weighting { Level = 64, Weight = 5f }, 
+    };
+
+    private Weighting[] cachedWeightings;
 
 
     private MeshFilter meshFilter;
@@ -61,66 +86,17 @@ public class TerrainGenerator : MonoBehaviour
         gameObject.isStatic = true;
     }
 
-    private float Perlin(int x, int y, Dictionary<int, float> weightings, int size)
+    private float Perlin(int x, int y, IEnumerable<Weighting> weightings, int size)
     {
         return weightings.Aggregate(
             0f,
-            (acc, w) => acc + Mathf.PerlinNoise((float)x / size * w.Key, (float)y / size * w.Key) * w.Value
+            (acc, w) => acc + Mathf.PerlinNoise((float)x / size * w.Level, (float)y / size * w.Level) * w.Weight
         );
-    }
-
-    private void Update()
-    {
-        // Check dirty
-        if (scale != cachedScale)
-        {
-            cachedScale = scale;
-            dirty = true;
-        }
-        if (meshResolution != cachedMeshResolution)
-        {
-            cachedMeshResolution = meshResolution;
-            dirty = true;
-
-            switch (meshResolution)
-            {
-                case TerrainResolution.Resolution_64:
-                    size = 64;
-                    break;
-
-                case TerrainResolution.Resolution_128:
-                    size = 128;
-                    break;
-
-                case TerrainResolution.Resolution_256:
-                    size = 256;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        if (dirty)
-        {
-            UpdateMesh();
-            dirty = false;
-        }
     }
 
     [ContextMenu("Update mesh")]
     private void UpdateMesh()
     {
-        var weightings = new Dictionary<int, float>()
-        { 
-            { 4, 100f },
-            { 8, 50f },
-            { 16, 20f },
-            { 32, 10f },
-            { 64, 5f },
-
-        };
-
         var mesh = MeshFilter.mesh = new Mesh();
 
         mesh.name = "TerrainChunk";
@@ -157,5 +133,69 @@ public class TerrainGenerator : MonoBehaviour
             .ToArray();
 
         mesh.RecalculateNormals();
+    }
+
+    private void Update()
+    {
+        // Check dirty
+        if (scale != cachedScale)
+        {
+            cachedScale = scale;
+            dirty = true;
+        }
+        if (meshResolution != cachedMeshResolution)
+        {
+            cachedMeshResolution = meshResolution;
+            dirty = true;
+
+            switch (meshResolution)
+            {
+                case TerrainResolution.Resolution_16:
+                    size = 16;
+                    break;
+
+                case TerrainResolution.Resolution_32:
+                    size = 32;
+                    break;
+
+                case TerrainResolution.Resolution_64:
+                    size = 64;
+                    break;
+
+                case TerrainResolution.Resolution_128:
+                    size = 128;
+                    break;
+
+                case TerrainResolution.Resolution_256:
+                    size = 256;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        if (weightings != null && cachedWeightings != null && weightings.Length == cachedWeightings.Length)
+        {
+            for (var i = 0; i < weightings.Length; i++)
+            {
+                if (!weightings[i].Equals(cachedWeightings[i]))
+                {
+                    dirty = true;
+                    cachedWeightings = (Weighting[])weightings.Clone();
+                    break;
+                }
+            }
+        }
+        else
+        {
+            dirty = true;
+            cachedWeightings = (Weighting[])weightings.Clone();
+        }
+
+        if (dirty)
+        {
+            UpdateMesh();
+            dirty = false;
+        }
     }
 }
