@@ -122,11 +122,11 @@ public class TerrainGenerator : MonoBehaviour
         mesh.vertices = Enumerable.Range(0, size)
             .SelectMany(i => Enumerable.Range(0, size)
                 .Select(j => new Vector3(
-                    i * scale.x / (size - 1), 
-                    scale.y * Perlin((float)i / size + posX, (float)j / size + posY, weightings), 
+                    i * scale.x / (size - 1),
+                    scale.y * Perlin((float)i / (size - 1) + posX, (float)j / (size - 1) + posY, weightings),
                     j * scale.z / (size - 1)
-                ) 
-            ))
+                ))
+            )
             .ToArray();
 
         mesh.triangles = Enumerable.Range(0, size - 1)
