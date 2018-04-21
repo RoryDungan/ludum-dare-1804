@@ -11,15 +11,15 @@ public class TerrainGenerator : MonoBehaviour
     // Enum so that it can be easily shown in the inspector.
     enum TerrainResolution
     {
-        Resolution_256,
-        Resolution_128,
-        Resolution_64,
-        Resolution_32,
-        Resolution_16,
+        Resolution_257,
+        Resolution_129,
+        Resolution_65,
+        Resolution_33,
+        Resolution_17,
     }
 
     [SerializeField]
-    private TerrainResolution meshResolution = TerrainResolution.Resolution_256;
+    private TerrainResolution meshResolution = TerrainResolution.Resolution_257;
 
     private TerrainResolution cachedMeshResolution;
 
@@ -150,30 +150,31 @@ public class TerrainGenerator : MonoBehaviour
 
             switch (meshResolution)
             {
-                case TerrainResolution.Resolution_16:
-                    size = 16;
+                case TerrainResolution.Resolution_17:
+                    size = 17;
                     break;
 
-                case TerrainResolution.Resolution_32:
-                    size = 32;
+                case TerrainResolution.Resolution_33:
+                    size = 33;
                     break;
 
-                case TerrainResolution.Resolution_64:
-                    size = 64;
+                case TerrainResolution.Resolution_65:
+                    size = 65;
                     break;
 
-                case TerrainResolution.Resolution_128:
-                    size = 128;
+                case TerrainResolution.Resolution_129:
+                    size = 129;
                     break;
 
-                case TerrainResolution.Resolution_256:
-                    size = 256;
+                case TerrainResolution.Resolution_257:
+                    size = 257;
                     break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         if (weightings != null && cachedWeightings != null && weightings.Length == cachedWeightings.Length)
         {
             for (var i = 0; i < weightings.Length; i++)
