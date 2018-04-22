@@ -17,6 +17,8 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
         private bool m_AirBrakes;
         private float m_Yaw;
 
+        private float initialMouseX;
+        private float initialMouseY;
 
         private void Awake()
         {
@@ -24,12 +26,13 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
             m_Aeroplane = GetComponent<AeroplaneController>();
         }
 
-
         private void FixedUpdate()
         {
             // Read input for the pitch, yaw, roll and throttle of the aeroplane.
-            float roll = CrossPlatformInputManager.GetAxis("Mouse X");
-            float pitch = CrossPlatformInputManager.GetAxis("Mouse Y");
+            //float roll = CrossPlatformInputManager.GetAxis("Mouse X");
+            //float pitch = CrossPlatformInputManager.GetAxis("Mouse Y");
+            float roll = (Input.mousePosition.x - Screen.width / 2f) / Screen.width;
+            float pitch = (Input.mousePosition.y - Screen.width / 2f) / Screen.height;
             m_AirBrakes = CrossPlatformInputManager.GetButton("Fire1");
             m_Yaw = CrossPlatformInputManager.GetAxis("Horizontal");
             m_Throttle = CrossPlatformInputManager.GetAxis("Vertical");
