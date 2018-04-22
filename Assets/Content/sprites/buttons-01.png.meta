@@ -7,6 +7,7 @@ TextureImporter:
     21300000: buttons-01_0
     21300002: buttons-01_1
     21300004: buttons-01_2
+    21300006: buttons-01_3
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -97,12 +98,12 @@ TextureImporter:
       name: buttons-01_0
       rect:
         serializedVersion: 2
-        x: 75
-        y: 848
+        x: 42
+        y: 1238
         width: 1470
-        height: 337
+        height: 303
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -111,12 +112,12 @@ TextureImporter:
       name: buttons-01_1
       rect:
         serializedVersion: 2
-        x: 75
-        y: 470
+        x: 42
+        y: 845
         width: 1470
-        height: 336
+        height: 303
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -125,12 +126,26 @@ TextureImporter:
       name: buttons-01_2
       rect:
         serializedVersion: 2
-        x: 75
-        y: 109
+        x: 42
+        y: 451
         width: 1470
         height: 303
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: buttons-01_3
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 57
+        width: 1470
+        height: 303
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
