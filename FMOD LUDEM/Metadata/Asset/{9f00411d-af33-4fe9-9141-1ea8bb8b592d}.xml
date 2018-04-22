@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="EncodableAsset" id="{9f00411d-af33-4fe9-9141-1ea8bb8b592d}">
+        <property name="assetPath">
+            <value>growl/</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{3fed8f10-e20d-4885-a7d4-92199de200d9}</destination>
+        </relationship>
+    </object>
+</objects>
