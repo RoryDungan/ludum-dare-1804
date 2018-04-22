@@ -14,6 +14,9 @@ public class PhotoCamera : MonoBehaviour
     [SerializeField]
     private Camera photoCamera;
 
+    [SerializeField]
+    private RenderTexture photoTexture;
+
     private GameObject mainCamera;
 
     ////////////////////////////////////////
@@ -25,6 +28,7 @@ public class PhotoCamera : MonoBehaviour
     {
         Assert.IsNotNull(viewfinderCamera, "Viewfinder Camera not assigned to PhotoCamera");
         Assert.IsNotNull(photoCamera, "Photo Camera not assigned to PhotoCamera");
+        Assert.IsNotNull(photoTexture, "Photo Texture not assigned to PhotoCamera");
 
         mainCamera = Camera.main.gameObject;
     }
@@ -35,6 +39,11 @@ public class PhotoCamera : MonoBehaviour
         {
             TogglePhotoMode();
         }
+
+        if (photoMode && Input.GetKeyDown(KeyCode.E))
+        {
+            TakePhoto();
+        }
     }
 
     private void TogglePhotoMode()
@@ -43,5 +52,9 @@ public class PhotoCamera : MonoBehaviour
 
         mainCamera.SetActive(!photoMode);
         viewfinderCamera.SetActive(photoMode);
+    }
+
+    private void TakePhoto()
+    {
     }
 }
