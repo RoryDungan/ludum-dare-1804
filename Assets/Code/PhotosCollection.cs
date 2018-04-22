@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -12,18 +13,24 @@ public class PhotosCollection
     /// <summary>
     /// Cache of photo IDs.
     /// </summary>
-    private readonly IList<string> photoIds;
+    private PhotoCollectionData data;
+
+    [Serializable]
+    private struct PhotoCollectionData
+    {
+        public List<string> photoIds;
+    }
 
     public PhotosCollection(string collectionPath)
     {
-        if (!File.Exists(collectionPath))
+        if (File.Exists(collectionPath))
         {
-            photoIds = new List<string>();
+            var collectionFile = File.ReadAllText(collectionPath);
+            data.photoIds = JsonUtility.FromJson<List<string>>(collectionFile);
         }
         else
         {
-            var collectionFile = File.ReadAllText(collectionPath);
-            photoIds = JsonUtility.FromJson<List<string>>(collectionFile);
+            data.photoIds = new List<string>();
         }
 
         collectionFilePath = collectionPath;
@@ -31,12 +38,12 @@ public class PhotosCollection
 
     public bool AddPhoto(string id)
     {
-        if (photoIds.Contains(id))
+        if (data.photoIds.Contains(id))
         {
             return false;
         }
 
-        photoIds.Add(id);
+        data.photoIds.Add(id);
         UpdateCollectionFile();
 
         return true;
@@ -44,7 +51,7 @@ public class PhotosCollection
 
     public bool RemovePhoto(string id)
     {
-        var ret = photoIds.Remove(id);
+        var ret = data.photoIds.Remove(id);
         if (ret)
         {
             UpdateCollectionFile();
@@ -54,11 +61,11 @@ public class PhotosCollection
 
     public IEnumerable<string> GetPhotoIds()
     {
-        return photoIds;
+        return data.photoIds;
     }
 
     private void UpdateCollectionFile()
     {
-        File.WriteAllText(collectionFilePath, JsonUtility.ToJson(photoIds));
+        File.WriteAllText(collectionFilePath, JsonUtility.ToJson(data));
     }
 }
