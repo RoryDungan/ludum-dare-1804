@@ -83,7 +83,7 @@ public class PhotoCamera : MonoBehaviour
             TogglePhotoMode();
         }
 
-        if (photoMode && Input.GetKeyDown(KeyCode.E))
+        if (photoMode && !takingPhoto && Input.GetKeyDown(KeyCode.E))
         {
             TakePhoto();
         }
@@ -99,12 +99,17 @@ public class PhotoCamera : MonoBehaviour
         if (!photoMode)
         {
             photoReviewScreen.SetActive(false);
+            Time.timeScale = 1.0f;
+            takingPhoto = false;
         }
     }
 
     private void TakePhoto()
     {
         takingPhoto = true;
+
+        // Pause the game
+        Time.timeScale = 0f;
 
         viewfinderScreen.SetActive(false);
         photoReviewScreen.SetActive(true);
@@ -118,7 +123,7 @@ public class PhotoCamera : MonoBehaviour
 
     private IPromise FadeFromWhite()
     {
-        return promiseTimer.WaitUntil(t =>
+        return promiseTimer.WaitUntilUnscaled(t =>
         {
             var newColour = fadeImage.color;
             newColour.a = Mathf.Max(0f, 1f - (t.elapsedTime / fadeDuration));
