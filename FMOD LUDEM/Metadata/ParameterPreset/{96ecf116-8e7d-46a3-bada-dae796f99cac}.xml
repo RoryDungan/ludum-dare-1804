@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{96ecf116-8e7d-46a3-bada-dae796f99cac}">
+        <property name="name">
+            <value>Angle</value>
+        </property>
+        <relationship name="folder">
+            <destination>{947004cc-2012-4494-a786-ae2559f3658a}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{49e96ea3-af3b-4871-9c0f-4185759ef35e}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{49e96ea3-af3b-4871-9c0f-4185759ef35e}">
+        <property name="minimum">
+            <value>-1</value>
+        </property>
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>
