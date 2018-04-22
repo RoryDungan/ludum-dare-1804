@@ -1,0 +1,143 @@
+fileFormatVersion: 2
+guid: 3e016415da7f82845a3bd959462a31c6
+timeCreated: 1524370685
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: armature_plane
+    100002: leg01.l
+    100004: leg01.r
+    100006: leg02.l
+    100008: leg02.r
+    100010: leg03.l
+    100012: leg03.r
+    100014: leg04.l
+    100016: leg04.l_end
+    100018: leg04.r
+    100020: leg04.r_end
+    100022: leg_ik.l
+    100024: leg_ik.l_end
+    100026: leg_ik.r
+    100028: leg_ik.r_end
+    100030: leg_pole.l
+    100032: leg_pole.l_end
+    100034: leg_pole.r
+    100036: leg_pole.r_end
+    100038: //RootNode
+    100040: plane_01
+    100042: plane_02
+    100044: root
+    400000: armature_plane
+    400002: leg01.l
+    400004: leg01.r
+    400006: leg02.l
+    400008: leg02.r
+    400010: leg03.l
+    400012: leg03.r
+    400014: leg04.l
+    400016: leg04.l_end
+    400018: leg04.r
+    400020: leg04.r_end
+    400022: leg_ik.l
+    400024: leg_ik.l_end
+    400026: leg_ik.r
+    400028: leg_ik.r_end
+    400030: leg_pole.l
+    400032: leg_pole.l_end
+    400034: leg_pole.r
+    400036: leg_pole.r_end
+    400038: //RootNode
+    400040: plane_01
+    400042: plane_02
+    400044: root
+    2100000: plane
+    2100002: Material
+    4300000: plane_02
+    4300002: plane_01
+    7400000: plane_idle
+    7400002: armature_plane|plane_idle
+    7400004: armature_plane|plane_legs_down
+    9500000: //RootNode
+    13700000: plane_01
+    13700002: plane_02
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
