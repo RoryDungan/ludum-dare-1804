@@ -8,7 +8,7 @@ using UnityEngine.Assertions;
 /// <summary>
 /// Generates terrain on the attached MeshFilter
 /// </summary>
-[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshFilter)), RequireComponent(typeof(MeshRenderer))]
 [ExecuteInEditMode]
 public class TerrainGenerator : MonoBehaviour
 {
@@ -87,7 +87,7 @@ public class TerrainGenerator : MonoBehaviour
         new Weighting { Level = 8, Weight = 50f },
         new Weighting { Level = 16, Weight = 20f },
         new Weighting { Level = 32, Weight = 5f },
-        new Weighting { Level = 64, Weight = 3f }, 
+        new Weighting { Level = 64, Weight = 2f }, 
     };
 
     private Weighting[] cachedWeightings;
@@ -129,6 +129,24 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
+    public Material Material
+    {
+        get
+        {
+            var renderer = GetComponent<MeshRenderer>();
+            Assert.IsNotNull(renderer, "No MeshRenderer assigned to TerrainGenerator object");
+
+            return renderer.material;
+        }
+        set
+        {
+            var renderer = GetComponent<MeshRenderer>();
+            Assert.IsNotNull(renderer, "No MeshRenderer assigned to TerrainGenerator object");
+
+            renderer.material = value;
+        }
+    }
+
     private MeshCollider InitColliderObject()
     {
         var colliderObject = new GameObject
@@ -136,6 +154,7 @@ public class TerrainGenerator : MonoBehaviour
             name = "Collider",
         };
         colliderObject.transform.parent = transform;
+        colliderObject.transform.localPosition = Vector3.zero;
 
         // Move the collider object up to ensure that it doesn't intersect with the visual
         // mesh.
@@ -148,7 +167,7 @@ public class TerrainGenerator : MonoBehaviour
     /// <summary>
     /// Ensure the game object is set up correctly.
     /// </summary>
-    private void SetupGameObject()
+    public void SetupGameObject()
     {
         transform.localScale = Vector3.one;
         transform.localRotation = Quaternion.identity;
