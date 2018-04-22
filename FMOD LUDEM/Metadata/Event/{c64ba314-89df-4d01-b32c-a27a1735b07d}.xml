@@ -199,7 +199,7 @@
     <object class="MixerBusFader" id="{6c530719-ce3e-418f-aceb-2932924c4e16}"/>
     <object class="ThreeEQEffect" id="{3172b451-c842-4957-9305-c8ed4af399eb}">
         <property name="highGain">
-            <value>-10</value>
+            <value>-0.5</value>
         </property>
         <relationship name="automators">
             <destination>{b96bb98d-951e-41c1-acdc-915b16e6fb05}</destination>
