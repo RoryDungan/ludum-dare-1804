@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+/// <summary>
+/// Keeps a list of the photos we've taken as a JSON file so we can keep track of them.
+/// </summary>
 public class PhotosCollection
 {
     /// <summary>

@@ -9,8 +9,12 @@ public class PhotoCamera : MonoBehaviour
     ////////////////////////////////////////
     // Cached references to other objects
     ////////////////////////////////////////
+    [SerializeField]
     private GameObject viewfinderCamera;
+
+    [SerializeField]
     private Camera photoCamera;
+
     private GameObject viewfinderScreen;
     private GameObject photoReviewScreen;
     private Image fadeImage;
@@ -42,14 +46,9 @@ public class PhotoCamera : MonoBehaviour
     {
         var children = GetComponentsInChildren<Transform>(true);
 
-        var viewfinderCameraTransform = children.FirstOrDefault(t => t.name == "ViewfinderCamera"); 
-        Assert.IsNotNull(viewfinderCameraTransform, "Could not find object named 'ViewfinderCamera' in children");
-        viewfinderCamera = viewfinderCameraTransform.gameObject;
+        Assert.IsNotNull(viewfinderCamera, "No Viewfinder Camera assigned to PhotoCamera.");
 
-        var photoCameraTransform = children.FirstOrDefault(t => t.name == "PhotoCamera");
-        Assert.IsNotNull(photoCameraTransform, "Could not find object named 'PhotoCamera' in children");
-        photoCamera = photoCameraTransform.GetComponent<Camera>();
-        Assert.IsNotNull(photoCamera, "Could not find Camera component on 'PhotoCamera'");
+        Assert.IsNotNull(photoCamera, "No PhotoCamera camera assigned to PhotoCamera script.");
 
         var viewfinderScreenTransform = children.FirstOrDefault(t => t.name == "ViewfinderScreen");
         Assert.IsNotNull(viewfinderScreenTransform, "Could not find object named 'ViewfinderScreen' in children");
