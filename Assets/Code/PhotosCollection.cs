@@ -26,7 +26,7 @@ public class PhotosCollection
         if (File.Exists(collectionPath))
         {
             var collectionFile = File.ReadAllText(collectionPath);
-            data.photoIds = JsonUtility.FromJson<List<string>>(collectionFile);
+            data = JsonUtility.FromJson<PhotoCollectionData>(collectionFile);
         }
         else
         {
