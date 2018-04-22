@@ -92,6 +92,9 @@
         <property name="length">
             <value>2.6166666666666667</value>
         </property>
+        <property name="volume">
+            <value>10</value>
+        </property>
         <relationship name="audioFile">
             <destination>{6c795057-1b39-4cb3-9b37-02b415f01baf}</destination>
         </relationship>
@@ -139,7 +142,7 @@
             <value>0</value>
         </property>
         <property name="maximumDistance">
-            <value>7</value>
+            <value>50</value>
         </property>
     </object>
     <object class="MixerBusFader" id="{83cd865e-df98-46e8-9642-1713d0b09d54}"/>
