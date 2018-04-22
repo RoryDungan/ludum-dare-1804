@@ -83,6 +83,7 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField]
     private Weighting[] weightings = new[]
     { 
+        new Weighting { Level = 1, Weight = 400f },
         new Weighting { Level = 4, Weight = 200f },
         new Weighting { Level = 8, Weight = 50f },
         new Weighting { Level = 16, Weight = 20f },

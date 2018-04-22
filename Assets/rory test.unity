@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 8
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.91372555, g: 1, b: 1, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.001
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -177,6 +177,10 @@ Prefab:
       propertyPath: m_Target
       value: 
       objectReference: {fileID: 168166695}
+    - target: {fileID: 1968992443284392, guid: 1b0ea781da0cde74faaec5587c80019f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1b0ea781da0cde74faaec5587c80019f, type: 2}
   m_IsPrefabParent: 0
@@ -216,8 +220,8 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 4439174006000668, guid: 45fd277bc06921840a5f06df09b0a6ca,
     type: 2}
-  m_PrefabInternal: {fileID: 967596404}
---- !u!1001 &967596404
+  m_PrefabInternal: {fileID: 433134878}
+--- !u!1001 &433134878
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
