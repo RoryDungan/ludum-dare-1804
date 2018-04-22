@@ -32,7 +32,7 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
             //float roll = CrossPlatformInputManager.GetAxis("Mouse X");
             //float pitch = CrossPlatformInputManager.GetAxis("Mouse Y");
             float roll = (Input.mousePosition.x - Screen.width / 2f) / Screen.width;
-            float pitch = (Input.mousePosition.y - Screen.width / 2f) / Screen.height;
+            float pitch = (-(Input.mousePosition.y - Screen.height / 2f)) / Screen.height;
             m_AirBrakes = CrossPlatformInputManager.GetButton("Fire1");
             m_Yaw = CrossPlatformInputManager.GetAxis("Horizontal");
             m_Throttle = CrossPlatformInputManager.GetAxis("Vertical");
