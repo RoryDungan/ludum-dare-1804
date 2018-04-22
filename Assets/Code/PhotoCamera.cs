@@ -14,11 +14,16 @@ public class PhotoCamera : MonoBehaviour
     private GameObject viewfinderScreen;
     private GameObject photoReviewScreen;
     private Image fadeImage;
-    private Button okButton;
+    private Button keepButton;
+    private Button deleteButton;
+
+    [SerializeField]
+    private RenderTexture photoRenderTexture;
 
     private GameObject mainCamera;
 
     private Assets.Code.PromiseTimer promiseTimer;
+    private PhotoManager photoManager;
 
     ////////////////////////////////////////
     // Configurable options
@@ -59,21 +64,31 @@ public class PhotoCamera : MonoBehaviour
         fadeImage = fadeImageTransform.GetComponent<Image>();
         Assert.IsNotNull(fadeImage, "Could not find Image component on 'ReviewScreenFade'");
 
-        var okButtonTransform = children.FirstOrDefault(t => t.name == "OkButton");
-        Assert.IsNotNull(fadeImageTransform, "Could not find object named 'OkButton' in children");
-        okButton = okButtonTransform.GetComponent<Button>();
-        Assert.IsNotNull(okButton, "Could not find Button component on 'OkButton'");
+        var keepButtonTransform = children.FirstOrDefault(t => t.name == "KeepButton");
+        Assert.IsNotNull(keepButtonTransform, "Could not find object named 'KeepButton' in children");
+        keepButton = keepButtonTransform.GetComponent<Button>();
+        Assert.IsNotNull(keepButton, "Could not find Button component on 'KeepButton'");
 
-        okButton.onClick.AddListener(DismissReviewScreen);
+        var deleteButtonTransform = children.FirstOrDefault(t => t.name == "DeleteButton");
+        Assert.IsNotNull(deleteButtonTransform, "Could not find object named 'DeleteButton' in children");
+        deleteButton = deleteButtonTransform.GetComponent<Button>();
+        Assert.IsNotNull(deleteButton, "Could not find Button component on 'DeleteButton'");
+
+        keepButton.onClick.AddListener(KeepPhotoClicked);
+        deleteButton.onClick.AddListener(DeletePhotoClicked);
 
         mainCamera = Camera.main.gameObject;
 
         promiseTimer = Assets.Code.PromiseTimer.Instance;
+        photoManager = PhotoManager.Instance;
+
+        Assert.IsNotNull(photoRenderTexture, "No PhotoRenderTexture assigned to PhotoCamera");
     }
 
     private void OnDestroy()
     {
-        okButton.onClick.RemoveListener(DismissReviewScreen);
+        keepButton.onClick.RemoveListener(KeepPhotoClicked);
+        deleteButton.onClick.RemoveListener(DeletePhotoClicked);
     }
 
     private void Update()
@@ -144,7 +159,24 @@ public class PhotoCamera : MonoBehaviour
             .Then(() => photoCamera.gameObject.SetActive(false));
     }
 
-    private void DismissReviewScreen()
+    private void KeepPhotoClicked()
+    {
+        keepButton.interactable = false;
+
+        promiseTimer.DoOnEndOfFrame(() => photoManager.SavePhoto(photoRenderTexture))
+            .Finally(() =>
+            {
+                keepButton.interactable = true;
+
+                if (photoMode)
+                {
+                    TogglePhotoMode();
+                }
+            })
+            .Done();
+    }
+
+    private void DeletePhotoClicked()
     {
         if (photoMode)
         {

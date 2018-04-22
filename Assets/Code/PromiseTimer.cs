@@ -1,5 +1,6 @@
 ﻿using RSG;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Code
@@ -17,6 +18,20 @@ namespace Assets.Code
         {
             timer = new RSG.PromiseTimer();
             unscaledTimer = new RSG.PromiseTimer();
+
+            Promise.UnhandledException += Promise_UnhandledException;
+        }
+
+        private void Promise_UnhandledException(object sender, ExceptionEventArgs e)
+        {
+            Debug.LogException(e.Exception);
+        }
+
+        new private void OnDestroy()
+        {
+            Promise.UnhandledException -= Promise_UnhandledException;
+
+            base.OnDestroy();
         }
 
         private void Update()
@@ -69,6 +84,27 @@ namespace Assets.Code
         public IPromise WaitWhileUnscaled(Func<TimeData, bool> p)
         {
             return unscaledTimer.WaitWhile(p);
+        }
+
+        public IPromise DoOnEndOfFrame(Action a)
+        {
+            var promise = new Promise();
+            StartCoroutine(WaitForEndOfFrame(a, promise));
+            return promise;
+        }
+
+        private IEnumerator WaitForEndOfFrame(Action a, IPendingPromise p)
+        {
+            yield return new WaitForEndOfFrame();
+            try
+            {
+                a();
+                p.Resolve();
+            }
+            catch (Exception ex)
+            {
+                p.Reject(ex);
+            }
         }
     }
 }
