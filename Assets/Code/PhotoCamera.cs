@@ -1,5 +1,5 @@
-﻿using Assets.Code;
-using RSG;
+﻿using RSG;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -9,20 +9,12 @@ public class PhotoCamera : MonoBehaviour
     ////////////////////////////////////////
     // Cached references to other objects
     ////////////////////////////////////////
-    [SerializeField]
     private GameObject viewfinderCamera;
-
-    [SerializeField]
     private Camera photoCamera;
-
-    [SerializeField]
-    private RenderTexture photoTexture;
-
-    [SerializeField]
+    private GameObject viewfinderScreen;
+    private GameObject photoReviewScreen;
     private Image fadeImage;
-
-    [SerializeField]
-    private RawImage photoReviewImage;
+    private Button okButton;
 
     private GameObject mainCamera;
 
@@ -43,15 +35,45 @@ public class PhotoCamera : MonoBehaviour
 
     private void Awake()
     {
-        Assert.IsNotNull(viewfinderCamera, "Viewfinder Camera not assigned to PhotoCamera");
-        Assert.IsNotNull(photoCamera, "Photo Camera not assigned to PhotoCamera");
-        Assert.IsNotNull(photoTexture, "Photo Texture not assigned to PhotoCamera");
-        Assert.IsNotNull(fadeImage, "Fade Image not assigned to PhotoCamera");
-        Assert.IsNotNull(photoReviewImage, "Photo Review Image not assigned to PhotoCamera");
+        var children = GetComponentsInChildren<Transform>(true);
+
+        var viewfinderCameraTransform = children.FirstOrDefault(t => t.name == "ViewfinderCamera"); 
+        Assert.IsNotNull(viewfinderCameraTransform, "Could not find object named 'ViewfinderCamera' in children");
+        viewfinderCamera = viewfinderCameraTransform.gameObject;
+
+        var photoCameraTransform = children.FirstOrDefault(t => t.name == "PhotoCamera");
+        Assert.IsNotNull(photoCameraTransform, "Could not find object named 'PhotoCamera' in children");
+        photoCamera = photoCameraTransform.GetComponent<Camera>();
+        Assert.IsNotNull(photoCamera, "Could not find Camera component on 'PhotoCamera'");
+
+        var viewfinderScreenTransform = children.FirstOrDefault(t => t.name == "ViewfinderScreen");
+        Assert.IsNotNull(viewfinderScreenTransform, "Could not find object named 'ViewfinderScreen' in children");
+        viewfinderScreen = viewfinderScreenTransform.gameObject;
+
+        var photoReviewScreenTransform = children.FirstOrDefault(t => t.name == "ReviewScreen");
+        Assert.IsNotNull(photoReviewScreenTransform, "Could not find object named 'ReviewScreen' in children");
+        photoReviewScreen = photoReviewScreenTransform.gameObject;
+
+        var fadeImageTransform = children.FirstOrDefault(t => t.name == "ReviewScreenFade");
+        Assert.IsNotNull(fadeImageTransform, "Could not find object named 'ReviewScreenFade' in children");
+        fadeImage = fadeImageTransform.GetComponent<Image>();
+        Assert.IsNotNull(fadeImage, "Could not find Image component on 'ReviewScreenFade'");
+
+        var okButtonTransform = children.FirstOrDefault(t => t.name == "OkButton");
+        Assert.IsNotNull(fadeImageTransform, "Could not find object named 'OkButton' in children");
+        okButton = okButtonTransform.GetComponent<Button>();
+        Assert.IsNotNull(okButton, "Could not find Button component on 'OkButton'");
+
+        okButton.onClick.AddListener(DismissReviewScreen);
 
         mainCamera = Camera.main.gameObject;
 
         promiseTimer = Assets.Code.PromiseTimer.Instance;
+    }
+
+    private void OnDestroy()
+    {
+        okButton.onClick.RemoveListener(DismissReviewScreen);
     }
 
     private void Update()
@@ -73,29 +95,33 @@ public class PhotoCamera : MonoBehaviour
 
         mainCamera.SetActive(!photoMode);
         viewfinderCamera.SetActive(photoMode);
+        viewfinderScreen.SetActive(photoMode);
+        if (!photoMode)
+        {
+            photoReviewScreen.SetActive(false);
+        }
     }
 
     private void TakePhoto()
     {
         takingPhoto = true;
 
-        FadeOut()
-            .Then(() => CaptureImage())
-            .Then(() => 
-            {
+        viewfinderScreen.SetActive(false);
+        photoReviewScreen.SetActive(true);
 
-                photoReviewImage.texture = photoTexture;
-                photoReviewImage.gameObject.SetActive(true);
-            })
+        fadeImage.color = Color.white;
+
+        CaptureImage()
+            .Then(() => FadeFromWhite())
             .Done();
     }
 
-    private IPromise FadeOut()
+    private IPromise FadeFromWhite()
     {
         return promiseTimer.WaitUntil(t =>
         {
             var newColour = fadeImage.color;
-            newColour.a = Mathf.Min(1f, (t.elapsedTime / fadeDuration));
+            newColour.a = Mathf.Max(0f, 1f - (t.elapsedTime / fadeDuration));
             fadeImage.color = newColour;
 
             return t.elapsedTime >= fadeDuration;
@@ -109,7 +135,15 @@ public class PhotoCamera : MonoBehaviour
     {
         photoCamera.gameObject.SetActive(true);
 
-        return promiseTimer.WaitUntil(t => t.elapsedUpdates > 0)
+        return promiseTimer.WaitUntil(t => t.elapsedUpdates > 1)
             .Then(() => photoCamera.gameObject.SetActive(false));
+    }
+
+    private void DismissReviewScreen()
+    {
+        if (photoMode)
+        {
+            TogglePhotoMode();
+        }
     }
 }
