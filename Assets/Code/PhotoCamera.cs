@@ -42,6 +42,9 @@ public class PhotoCamera : MonoBehaviour
 
     private bool takingPhoto;
 
+
+    private const string ShutterClickSound = "event:/camera";
+
     private void Awake()
     {
         var children = GetComponentsInChildren<Transform>(true);
@@ -129,6 +132,9 @@ public class PhotoCamera : MonoBehaviour
         photoReviewScreen.SetActive(true);
 
         fadeImage.color = Color.white;
+
+        // Play sound
+        FMODUnity.RuntimeManager.PlayOneShot(ShutterClickSound);
 
         CaptureImage()
             .Then(() => FadeFromWhite())
