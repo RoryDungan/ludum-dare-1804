@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject mainMenuUI;
 
+    private Animation mainMenuAnim;
+
     [SerializeField]
     private GameObject inGameUI;
 
@@ -26,6 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float introCinematicDuration = 3f;
 
+    private GameObject dummyPlane;
+
     private Camera mainCamera;
 
     private AeroplaneController aeroplaneController;
@@ -37,8 +41,10 @@ public class GameManager : MonoBehaviour
         aeroplaneController = FindObjectOfType<AeroplaneController>();
         Assert.IsNotNull(aeroplaneController);
 
-        //aeroplaneController.enabled = false;
         aeroplaneController.gameObject.SetActive(false);
+
+        dummyPlane = GameObject.Find("DummyPlane");
+        Assert.IsNotNull(dummyPlane);
 
         Assert.IsNotNull(mainMenuUI);
         Assert.IsNotNull(inGameUI);
@@ -48,6 +54,9 @@ public class GameManager : MonoBehaviour
         var cameraRigChildren = cameraRig.GetComponentsInChildren<Transform>(true);
         cameraRigPivot = cameraRigChildren.FirstOrDefault(t => t.gameObject.name == "Pivot");
         Assert.IsNotNull(cameraRigPivot);
+
+        mainMenuAnim = mainMenuUI.GetComponent<Animation>();
+        Assert.IsNotNull(mainMenuAnim);
 
         mainCamera = Camera.main;
 
@@ -69,8 +78,7 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
-        // Todo: play animation
-        mainMenuUI.SetActive(false);
+        mainMenuAnim.Play();
 
         promiseTimer.WaitUntil(t =>
         {
@@ -85,6 +93,14 @@ public class GameManager : MonoBehaviour
                 Quaternion.Lerp(mainCamera.transform.rotation, newRot, currentProgress);
 
             return t.elapsedTime >= introCinematicDuration;
+        })
+        .Then(() =>
+        {
+            mainMenuUI.SetActive(false);
+
+            AttachCameraToRig();
+            dummyPlane.SetActive(false);
+            aeroplaneController.gameObject.SetActive(true);
         })
         .Done();
     }
