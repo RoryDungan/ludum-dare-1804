@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FMODUnity;
-using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityStandardAssets.Vehicles.Aeroplane;
 
 public class PlaneSoundController : MonoBehaviour
