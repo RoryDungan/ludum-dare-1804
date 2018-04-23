@@ -1119,6 +1119,7 @@ GameObject:
   - component: {fileID: 114862664326223382}
   - component: {fileID: 114228732227879476}
   - component: {fileID: 114759046469407680}
+  - component: {fileID: 135316858967359244}
   m_Layer: 0
   m_Name: Worm
   m_TagString: Untagged
@@ -2825,14 +2826,14 @@ MonoBehaviour:
   Event: event:/monster loop
   PlayEvent: 1
   StopEvent: 2
-  CollisionTag: 
+  CollisionTag: Player
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
   Params: []
-  OverrideAttenuation: 0
+  OverrideAttenuation: 1
   OverrideMinDistance: 1
-  OverrideMaxDistance: 150
+  OverrideMaxDistance: 500
 --- !u!114 &114759046469407680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2865,6 +2866,18 @@ MonoBehaviour:
   TriggerOnce: 0
   Preload: 0
   Params: []
-  OverrideAttenuation: 0
+  OverrideAttenuation: 1
   OverrideMinDistance: 1
-  OverrideMaxDistance: 100
+  OverrideMaxDistance: 500
+--- !u!135 &135316858967359244
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1798399906629510}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 298.98
+  m_Center: {x: 0, y: 0, z: 0}

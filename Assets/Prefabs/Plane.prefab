@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 114201298784803394}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2652,7 +2652,7 @@ MonoBehaviour:
   Params: []
   OverrideAttenuation: 1
   OverrideMinDistance: 1
-  OverrideMaxDistance: 120
+  OverrideMaxDistance: 200
 --- !u!114 &114364540916047380
 MonoBehaviour:
   m_ObjectHideFlags: 1
