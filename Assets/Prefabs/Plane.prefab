@@ -1908,6 +1908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49fb41f6e6bc4e949952b7c344bf1160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedMultiplier: 0.005
 --- !u!114 &114327516019984782
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1955,15 +1956,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event: event:/wind
   PlayEvent: 1
-  StopEvent: 1
+  StopEvent: 2
   CollisionTag: 
   AllowFadeout: 1
   TriggerOnce: 0
-  Preload: 0
+  Preload: 1
   Params: []
-  OverrideAttenuation: 0
+  OverrideAttenuation: 1
   OverrideMinDistance: 1
-  OverrideMaxDistance: 50
+  OverrideMaxDistance: 200
 --- !u!114 &114774540388546348
 MonoBehaviour:
   m_ObjectHideFlags: 1
