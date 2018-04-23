@@ -37,8 +37,8 @@ public class PhotoSaveManager : Singleton<PhotoSaveManager>
         var thumbDest = Path.Combine(Application.persistentDataPath, ThumbnailsDir);
         Directory.CreateDirectory(thumbDest);
         File.WriteAllBytes(
-            Path.Combine(thumbDest, id + ".png"),
-            thumbnail.EncodeToPNG()
+            Path.Combine(thumbDest, id + ".jpg"),
+            thumbnail.EncodeToJPG()
         );
 
         photoCollection.AddPhoto(id);
