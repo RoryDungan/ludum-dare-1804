@@ -1,4 +1,5 @@
-﻿using RSG;
+﻿using Assets;
+using RSG;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -121,7 +122,7 @@ public class PhotoCamera : MonoBehaviour
         if (!photoMode)
         {
             photoReviewScreen.SetActive(false);
-            Time.timeScale = 1.0f;
+            PauseManager.Instance.Unpause();
             takingPhoto = false;
         }
     }
@@ -130,8 +131,7 @@ public class PhotoCamera : MonoBehaviour
     {
         takingPhoto = true;
 
-        // Pause the game
-        Time.timeScale = 0f;
+        PauseManager.Instance.Pause();
 
         viewfinderScreen.SetActive(false);
         photoReviewScreen.SetActive(true);

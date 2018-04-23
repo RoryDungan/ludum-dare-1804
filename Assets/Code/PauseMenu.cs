@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets;
+using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         paused = true;
-        Time.timeScale = 0f;
+        PauseManager.Instance.Pause();
 
         SetPauseMenuVisible(paused);
     }
@@ -31,7 +32,7 @@ public class PauseMenu : MonoBehaviour
     void Unpause()
     {
         paused = false;
-        Time.timeScale = 1f;
+        PauseManager.Instance.Unpause();
 
         SetPauseMenuVisible(paused);
     }
