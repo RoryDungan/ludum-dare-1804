@@ -1,4 +1,5 @@
 ﻿using Assets.Code;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public int TotalPhotos { get; private set; }
 
+    private IList<string> photoIds;
+
     private void Awake()
     {
         aeroplaneController = FindObjectOfType<AeroplaneController>();
@@ -90,6 +93,8 @@ public class GameManager : MonoBehaviour
 
         inGameUI.SetActive(false);
         aeroplaneController.gameObject.SetActive(false);
+
+        photoIds = new List<string>();
     }
 
     public void PlayClicked()
@@ -152,6 +157,8 @@ public class GameManager : MonoBehaviour
     public void OnPhotoTaken(string photoId)
     {
         PhotosTaken++;
+
+        photoIds.Add(photoId);
 
         if (PhotosTaken >= TotalPhotos)
         {

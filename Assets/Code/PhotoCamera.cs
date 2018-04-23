@@ -29,6 +29,8 @@ public class PhotoCamera : MonoBehaviour
     private Assets.Code.PromiseTimer promiseTimer;
     private PhotoSaveManager photoManager;
 
+    private GameManager gameManager;
+
     ////////////////////////////////////////
     // Configurable options
     ////////////////////////////////////////
@@ -85,6 +87,9 @@ public class PhotoCamera : MonoBehaviour
         photoManager = PhotoSaveManager.Instance;
 
         Assert.IsNotNull(photoRenderTexture, "No PhotoRenderTexture assigned to PhotoCamera");
+
+        gameManager = FindObjectOfType<GameManager>();
+        Assert.IsNotNull(gameManager);
     }
 
     private void OnDestroy()
@@ -168,7 +173,11 @@ public class PhotoCamera : MonoBehaviour
     {
         keepButton.interactable = false;
 
-        promiseTimer.DoOnEndOfFrame(() => photoManager.SavePhoto(photoRenderTexture))
+        promiseTimer.DoOnEndOfFrame(() =>
+            {
+                var id = photoManager.SavePhoto(photoRenderTexture);
+                gameManager.OnPhotoTaken(id);
+            })
             .Finally(() =>
             {
                 keepButton.interactable = true;

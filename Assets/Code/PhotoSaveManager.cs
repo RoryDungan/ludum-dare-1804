@@ -46,6 +46,19 @@ public class PhotoSaveManager : Singleton<PhotoSaveManager>
         return id;
     }
 
+    public Texture2D LoadPhotoThumbnail(string id)
+    {
+        var dir = Path.Combine(Application.persistentDataPath, ThumbnailsDir);
+        var path = Path.Combine(dir, id + ".jpg");
+
+        var data = File.ReadAllBytes(path);
+
+        // TODO: don't hardcode dimensions
+        var tex = new Texture2D(288, 216);
+        tex.LoadImage(data);
+        return tex;
+    }
+
     /// <summary>
     /// Resize a texture to a specified scale. Taken from this blog post: 
     /// http://blog.collectivemass.com/2014/03/resizing-textures-in-unity/
