@@ -36,6 +36,17 @@ public class GameManager : MonoBehaviour
 
     private PromiseTimer promiseTimer;
 
+
+    /// <summary>
+    /// The number of photos taken so far.
+    /// </summary>
+    public int PhotosTaken { get; private set; }
+
+    /// <summary>
+    /// The maximum number of photos.
+    /// </summary>
+    public int TotalPhotos { get; private set; }
+
     private void Awake()
     {
         aeroplaneController = FindObjectOfType<AeroplaneController>();
@@ -61,6 +72,18 @@ public class GameManager : MonoBehaviour
         mainCamera = Camera.main;
 
         promiseTimer = PromiseTimer.Instance;
+    }
+
+    private void Start()
+    {
+        ResetGame();
+    }
+
+    private void ResetGame()
+    {
+        // Default to 9 photos
+        TotalPhotos = 9;
+        PhotosTaken = 0;
     }
 
     public void PlayClicked()
@@ -112,5 +135,18 @@ public class GameManager : MonoBehaviour
     {
         mainCamera.transform.SetParent(null);
         cameraRig.SetActive(false);
+    }
+
+    /// <summary>
+    /// Called when a photo is taken.
+    /// </summary>
+    public void OnPhotoTaken(string photoId)
+    {
+        PhotosTaken++;
+
+        if (PhotosTaken >= TotalPhotos)
+        {
+            // TODO: show end game screen.
+        }
     }
 }

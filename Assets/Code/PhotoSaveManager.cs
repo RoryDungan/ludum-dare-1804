@@ -16,7 +16,7 @@ public class PhotoSaveManager : Singleton<PhotoSaveManager>
         );
     }
 
-    public void SavePhoto(RenderTexture photo)
+    public string SavePhoto(RenderTexture photo)
     {
         var texture = new Texture2D(photo.width, photo.height, TextureFormat.ARGB32, false);
         RenderTexture.active = photo;
@@ -42,6 +42,8 @@ public class PhotoSaveManager : Singleton<PhotoSaveManager>
         );
 
         photoCollection.AddPhoto(id);
+
+        return id;
     }
 
     /// <summary>
