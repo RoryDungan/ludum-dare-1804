@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     private Animation gameUIAnim;
 
+    private GameObject finalScreenUI;
+
     [SerializeField]
     private GameObject cameraRig;
 
@@ -74,6 +76,11 @@ public class GameManager : MonoBehaviour
 
         gameUIAnim = inGameUI.GetComponent<Animation>();
         Assert.IsNotNull(gameUIAnim);
+
+        finalScreenUI = inGameUI.GetComponentsInChildren<Transform>()
+            .Select(t => t.gameObject)
+            .FirstOrDefault(go => go.name == "FinalScreen");
+        Assert.IsNotNull(finalScreenUI);
 
         mainCamera = Camera.main;
 
