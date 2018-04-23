@@ -1,28 +1,21 @@
 ﻿using FMODUnity;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ButtonClickSound : MonoBehaviour
+public class ButtonClickSound : EventTrigger
 {
-    private const string clickSound = "event:/UI Button";
+    private const string clickSound1 = "event:/UI Button";
+    private const string clickSound2 = "event:/UI Button (2)";
 
-    private Button button;
-
-    private void Awake()
+    public override void OnPointerEnter(PointerEventData eventData)
     {
-        button = GetComponent<Button>();
-
-        button.onClick.AddListener(ButtonClicked);
+        RuntimeManager.PlayOneShot(clickSound2);
     }
 
-    private void OnDestroy()
+    public override void OnPointerClick(PointerEventData eventData)
     {
-        button.onClick.RemoveListener(ButtonClicked);
-    }
-
-    private void ButtonClicked()
-    {
-        RuntimeManager.PlayOneShot(clickSound);
+        RuntimeManager.PlayOneShot(clickSound1);
     }
 }
