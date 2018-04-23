@@ -35,6 +35,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4207588652795536}
   - component: {fileID: 114189354480017244}
+  - component: {fileID: 111629797433051506}
   m_Layer: 0
   m_Name: GameUI
   m_TagString: Untagged
@@ -125,6 +126,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &111629797433051506
+Animation:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033487592301174}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: ef5975b568a91cf488b650184115721e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: ef5975b568a91cf488b650184115721e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!114 &114004632039753330
 MonoBehaviour:
   m_ObjectHideFlags: 1

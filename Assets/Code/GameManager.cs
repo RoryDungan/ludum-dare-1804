@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject inGameUI;
 
+    private Animation gameUIAnim;
+
     [SerializeField]
     private GameObject cameraRig;
 
@@ -52,8 +54,6 @@ public class GameManager : MonoBehaviour
         aeroplaneController = FindObjectOfType<AeroplaneController>();
         Assert.IsNotNull(aeroplaneController);
 
-        aeroplaneController.gameObject.SetActive(false);
-
         dummyPlane = GameObject.Find("DummyPlane");
         Assert.IsNotNull(dummyPlane);
 
@@ -68,6 +68,9 @@ public class GameManager : MonoBehaviour
 
         mainMenuAnim = mainMenuUI.GetComponent<Animation>();
         Assert.IsNotNull(mainMenuAnim);
+
+        gameUIAnim = inGameUI.GetComponent<Animation>();
+        Assert.IsNotNull(gameUIAnim);
 
         mainCamera = Camera.main;
 
@@ -84,6 +87,9 @@ public class GameManager : MonoBehaviour
         // Default to 9 photos
         TotalPhotos = 9;
         PhotosTaken = 0;
+
+        inGameUI.SetActive(false);
+        aeroplaneController.gameObject.SetActive(false);
     }
 
     public void PlayClicked()
@@ -117,6 +123,9 @@ public class GameManager : MonoBehaviour
         .Then(() =>
         {
             mainMenuUI.SetActive(false);
+
+            inGameUI.SetActive(true);
+            gameUIAnim.Play();
 
             AttachCameraToRig();
             dummyPlane.SetActive(false);
