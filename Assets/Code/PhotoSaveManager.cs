@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class PhotoManager : Singleton<PhotoManager>
+public class PhotoSaveManager : Singleton<PhotoSaveManager>
 {
     private const string PhotosDir = "Photos";
     private const string ThumbnailsDir = "Thumbnails";
 
     private readonly PhotosCollection photoCollection;
 
-    public PhotoManager()
+    public PhotoSaveManager()
     {
         photoCollection = new PhotosCollection(
             Path.Combine(Application.persistentDataPath, "photos.json")

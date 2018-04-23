@@ -27,7 +27,7 @@ public class PhotoCamera : MonoBehaviour
     private GameObject mainCamera;
 
     private Assets.Code.PromiseTimer promiseTimer;
-    private PhotoManager photoManager;
+    private PhotoSaveManager photoManager;
 
     ////////////////////////////////////////
     // Configurable options
@@ -82,7 +82,7 @@ public class PhotoCamera : MonoBehaviour
         mainCamera = Camera.main.gameObject;
 
         promiseTimer = Assets.Code.PromiseTimer.Instance;
-        photoManager = PhotoManager.Instance;
+        photoManager = PhotoSaveManager.Instance;
 
         Assert.IsNotNull(photoRenderTexture, "No PhotoRenderTexture assigned to PhotoCamera");
     }
