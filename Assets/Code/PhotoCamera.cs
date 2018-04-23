@@ -43,7 +43,7 @@ public class PhotoCamera : MonoBehaviour
     private bool takingPhoto;
 
 
-    private const string ShutterClickSound = "event:/camera";
+    private const string ShutterClickSound = "event:/camera 2d";
 
     private void Awake()
     {
