@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 222357228736128686}
   - component: {fileID: 114319138734846686}
   - component: {fileID: 114979898282757212}
+  - component: {fileID: 114990849380309284}
   m_Layer: 5
   m_Name: DeleteButton
   m_TagString: Untagged
@@ -176,6 +177,7 @@ GameObject:
   - component: {fileID: 222251572841371556}
   - component: {fileID: 114904168107624188}
   - component: {fileID: 114431799022344284}
+  - component: {fileID: 114726024462398862}
   m_Layer: 5
   m_Name: KeepButton
   m_TagString: Untagged
@@ -429,6 +431,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114726024462398862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1913584931910332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 694713ac157bbff44ae5ab557b207a84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114824908405810594
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -546,6 +559,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114990849380309284
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766621895037646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 694713ac157bbff44ae5ab557b207a84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &222020689568276846
 CanvasRenderer:
   m_ObjectHideFlags: 1
