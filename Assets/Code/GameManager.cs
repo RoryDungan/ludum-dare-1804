@@ -68,6 +68,11 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    public void QuitClicked()
+    {
+        Application.Quit();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
