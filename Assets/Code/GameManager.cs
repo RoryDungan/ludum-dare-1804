@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     private GameObject finalScreenUIgo;
     private FinalScreenUI finalScreenUI;
+    private Animation finalScreenAnim;
 
     [SerializeField]
     private GameObject cameraRig;
@@ -85,6 +86,8 @@ public class GameManager : MonoBehaviour
         Assert.IsNotNull(finalScreenUIgo);
         finalScreenUI = finalScreenUIgo.GetComponent<FinalScreenUI>();
         Assert.IsNotNull(finalScreenUI);
+        finalScreenAnim = finalScreenUIgo.GetComponent<Animation>();
+        Assert.IsNotNull(finalScreenAnim);
 
         mainCamera = Camera.main;
 
@@ -182,6 +185,28 @@ public class GameManager : MonoBehaviour
         PauseManager.Instance.Pause();
 
         finalScreenUIgo.SetActive(true);
+        finalScreenAnim.Play();
+
+        // Hack to play animation while the game is paused
+        promiseTimer.WaitWhileUnscaled(t =>
+        {
+            bool unfinished = false;
+
+            foreach (AnimationState anim in finalScreenAnim)
+            {
+                if (t.elapsedTime <= anim.length)
+                {
+                    unfinished = true;
+                }
+
+                anim.time = t.elapsedTime;
+            }
+
+            finalScreenAnim.Sample();
+
+            return unfinished;
+        })
+        .Done();
 
         // TODO: clean up images
 
@@ -189,5 +214,7 @@ public class GameManager : MonoBehaviour
         {
             finalScreenUI.LoadAndDisplayImage(image);
         }
+
+
     }
 }
