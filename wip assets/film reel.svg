@@ -17,9 +17,7 @@
 	.st11{fill:#161616;}
 	.st12{fill:#FFFFFF;}
 	.st13{opacity:0.56;fill:#FFFFFF;}
-	.st14{display:inline;}
-	.st15{fill:#3D3D3D;}
-	.st16{fill:#CECECE;}
+	.st14{fill:#EDEDED;}
 </style>
 <g id="Layer_4">
 	<rect class="st0" width="1024" height="1024"/>
@@ -1159,13 +1157,13 @@
 <g id="Layer_7">
 	<rect class="st13" width="1024" height="1024"/>
 </g>
-<g id="roughness" class="st1">
-	<g class="st14">
-		<rect x="-11" y="-11" class="st15" width="1047" height="1047"/>
-		<path class="st16" d="M478,1012.2H-31.7c-6.6,0-12-5.4-12-12V744.3c0-6.6,5.4-12,12-12H478c6.6,0,12,5.4,12,12v255.9
+<g id="roughness">
+	<g>
+		<rect x="-11" y="-11" width="1047" height="1047"/>
+		<path class="st14" d="M478,1012.2H-31.7c-6.6,0-12-5.4-12-12V744.3c0-6.6,5.4-12,12-12H478c6.6,0,12,5.4,12,12v255.9
 			C490,1006.8,484.6,1012.2,478,1012.2z"/>
-		<path class="st16" d="M277.1,710.9H26.2c-6.6,0-12-5.4-12-12V443c0-6.6,5.4-12,12-12h250.9V710.9z"/>
-		<rect x="556.8" y="450.4" class="st16" width="160.8" height="267.4"/>
+		<path class="st14" d="M277.1,710.9H26.2c-6.6,0-12-5.4-12-12V443c0-6.6,5.4-12,12-12h250.9V710.9z"/>
+		<rect x="556.8" y="450.4" class="st14" width="160.8" height="267.4"/>
 	</g>
 </g>
 </svg>
