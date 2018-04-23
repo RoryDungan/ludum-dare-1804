@@ -1,4 +1,5 @@
-﻿using Assets.Code;
+﻿using Assets;
+using Assets.Code;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +18,8 @@ public class GameManager : MonoBehaviour
 
     private Animation gameUIAnim;
 
-    private GameObject finalScreenUI;
+    private GameObject finalScreenUIgo;
+    private FinalScreenUI finalScreenUI;
 
     [SerializeField]
     private GameObject cameraRig;
@@ -77,9 +79,11 @@ public class GameManager : MonoBehaviour
         gameUIAnim = inGameUI.GetComponent<Animation>();
         Assert.IsNotNull(gameUIAnim);
 
-        finalScreenUI = inGameUI.GetComponentsInChildren<Transform>()
+        finalScreenUIgo = inGameUI.GetComponentsInChildren<Transform>(true)
             .Select(t => t.gameObject)
             .FirstOrDefault(go => go.name == "FinalScreen");
+        Assert.IsNotNull(finalScreenUIgo);
+        finalScreenUI = finalScreenUIgo.GetComponent<FinalScreenUI>();
         Assert.IsNotNull(finalScreenUI);
 
         mainCamera = Camera.main;
@@ -169,7 +173,21 @@ public class GameManager : MonoBehaviour
 
         if (PhotosTaken >= TotalPhotos)
         {
-            // TODO: show end game screen.
+            ShowEndScreen();
+        }
+    }
+
+    private void ShowEndScreen()
+    {
+        PauseManager.Instance.Pause();
+
+        finalScreenUIgo.SetActive(true);
+
+        // TODO: clean up images
+
+        foreach (var image in photoIds)
+        {
+            finalScreenUI.LoadAndDisplayImage(image);
         }
     }
 }
