@@ -213,11 +213,7 @@ public class TerrainGenerator : MonoBehaviour
     }
 
     private static int[] GenerateTris(
-        int size,
-        int posX,
-        int posY,
-        IEnumerable<Weighting> weightings,
-        Vector3 scale
+        int size
     )
     {
         var total = size - 1;
@@ -259,35 +255,42 @@ public class TerrainGenerator : MonoBehaviour
     [ContextMenu("Update mesh")]
     public void UpdateMesh()
     {
-        //var sw = new Stopwatch();
-        //sw.Start();
+        var sw = Stopwatch.StartNew();
 
         var mesh = MeshFilter.mesh = new Mesh
         {
             name = "TerrainChunk",
             vertices = GenerateVerts(Size, posX, posY, weightings, scale),
-            triangles = GenerateTris(Size, posX, posY, weightings, scale),
+            triangles = GenerateTris(Size),
             uv = GenerateUVs(Size)
         };
 
         mesh.RecalculateNormals();
 
+        sw.Stop();
+        var elapsedMs = (double)sw.ElapsedTicks / Stopwatch.Frequency * 1000D;
+        UnityEngine.Debug.Log("UpdateMesh: " + elapsedMs + "ms");
+
         UpdateCollider();
 
-        //sw.Stop();
-        //UnityEngine.Debug.Log("UpdateMesh: " + sw.ElapsedMilliseconds + "ms");
     }
 
     private void UpdateCollider()
     {
+        var sw = Stopwatch.StartNew();
+
         var mesh = new Mesh
         {
             name = "TerrainCollider",
             vertices = GenerateVerts(17, posX, posY, weightings, scale),
-            triangles = GenerateTris(17, posX, posY, weightings, scale)
+            triangles = GenerateTris(17)
         };
 
         MeshCollider.sharedMesh = mesh;
+
+        sw.Stop();
+        var elapsedMs = (double)sw.ElapsedTicks / Stopwatch.Frequency * 1000D;
+        UnityEngine.Debug.Log("UpdateCollider: " + elapsedMs.ToString("##.##") + "ms");
     }
 
 
@@ -376,7 +379,6 @@ public class TerrainGenerator : MonoBehaviour
         if (dirty)
         {
             UpdateMesh();
-            dirty = false;
         }
     }
 }
