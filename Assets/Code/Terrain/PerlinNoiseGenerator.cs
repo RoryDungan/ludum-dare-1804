@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Assets.Code.Terrain
+﻿namespace Assets.Code.Terrain
 {
     // Taken from https://gist.github.com/Flafla2/f0260a861be0ebdeef76
     public class Perlin
@@ -14,12 +9,12 @@ namespace Assets.Code.Terrain
             this.repeat = repeat;
         }
 
-        public double OctavePerlin(double x, double y, double z, int octaves, double persistence) {
-            double total = 0;
-            double frequency = 1;
-            double amplitude = 1;
-            double maxValue = 0;			// Used for normalizing result to 0.0 - 1.0
-            for(int i=0;i<octaves;i++) {
+        public float OctavePerlin(float x, float y, float z, int octaves, float persistence) {
+            float total = 0;
+            float frequency = 1;
+            float amplitude = 1;
+            float maxValue = 0;			// Used for normalizing result to 0.0 - 1.0
+            for (int i = 0; i < octaves; i++) {
                 total += perlin(x * frequency, y * frequency, z * frequency) * amplitude;
                 
                 maxValue += amplitude;
@@ -50,12 +45,12 @@ namespace Assets.Code.Terrain
         
         static Perlin() {
             p = new int[512];
-            for(int x=0;x<512;x++) {
+            for (int x=0;x<512;x++) {
                 p[x] = permutation[x%256];
             }
         }
         
-        public double perlin(double x, double y, double z) {
+        public float perlin(float x, float y, float z) {
             if(repeat > 0) {									// If we have any repeat on, change the coordinates to their "local" repetitions
                 x = x%repeat;
                 y = y%repeat;
@@ -65,12 +60,12 @@ namespace Assets.Code.Terrain
             int xi = (int)x & 255;								// Calculate the "unit cube" that the point asked will be located in
             int yi = (int)y & 255;								// The left bound is ( |_x_|,|_y_|,|_z_| ) and the right bound is that
             int zi = (int)z & 255;								// plus 1.  Next we calculate the location (from 0.0 to 1.0) in that cube.
-            double xf = x-(int)x;								// We also fade the location to smooth the result.
-            double yf = y-(int)y;
-            double zf = z-(int)z;
-            double u = fade(xf);
-            double v = fade(yf);
-            double w = fade(zf);
+            float xf = x-(int)x;								// We also fade the location to smooth the result.
+            float yf = y-(int)y;
+            float zf = z-(int)z;
+            float u = fade(xf);
+            float v = fade(yf);
+            float w = fade(zf);
                                                                 
             int aaa, aba, aab, abb, baa, bba, bab, bbb;
             aaa = p[p[p[    xi ]+    yi ]+    zi ];
@@ -82,7 +77,7 @@ namespace Assets.Code.Terrain
             bab = p[p[p[inc(xi)]+    yi ]+inc(zi)];
             bbb = p[p[p[inc(xi)]+inc(yi)]+inc(zi)];
         
-            double x1, x2, y1, y2;
+            float x1, x2, y1, y2;
             x1 = lerp(	grad (aaa, xf  , yf  , zf),				// The gradient function calculates the dot product between a pseudorandom
                         grad (baa, xf-1, yf  , zf),				// gradient vector and the vector from the input coordinate to the 8
                         u);										// surrounding points in its unit cube.
@@ -109,11 +104,11 @@ namespace Assets.Code.Terrain
             return num;
         }
         
-        public static double grad(int hash, double x, double y, double z) {
+        public static float grad(int hash, float x, float y, float z) {
             int h = hash & 15;									// Take the hashed value and take the first 4 bits of it (15 == 0b1111)
-            double u = h < 8 /* 0b1000 */ ? x : y;				// If the most significant bit (MSB) of the hash is 0 then set u = x.  Otherwise y.
+            float u = h < 8 /* 0b1000 */ ? x : y;				// If the most significant bit (MSB) of the hash is 0 then set u = x.  Otherwise y.
             
-            double v;											// In Ken Perlin's original implementation this was another conditional operator (?:).  I
+            float v;											// In Ken Perlin's original implementation this was another conditional operator (?:).  I
                                                                 // expanded it for readability.
             
             if(h < 4 /* 0b0100 */)								// If the first and second significant bits are 0 set v = y
@@ -126,14 +121,14 @@ namespace Assets.Code.Terrain
             return ((h&1) == 0 ? u : -u)+((h&2) == 0 ? v : -v); // Use the last 2 bits to decide if u and v are positive or negative.  Then return their addition.
         }
         
-        public static double fade(double t) {
+        public static float fade(float t) {
                                                                 // Fade function as defined by Ken Perlin.  This eases coordinate values
                                                                 // so that they will "ease" towards integral values.  This ends up smoothing
                                                                 // the final output.
             return t * t * t * (t * (t * 6 - 15) + 10);			// 6t^5 - 15t^4 + 10t^3
         }
         
-        public static double lerp(double a, double b, double x) {
+        public static float lerp(float a, float b, float x) {
             return a + x * (b - a);
         }
     }

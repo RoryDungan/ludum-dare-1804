@@ -183,7 +183,7 @@ public class TerrainGenerator : MonoBehaviour
         for (var i = 0; i < weightings.Length; i++)
         {
             //acc += Mathf.PerlinNoise(x * weightings[i].Level, y * weightings[i].Level) * weightings[i].Weight;
-            acc += (float)perlin.perlin((double)x * weightings[i].Level, (double)y * weightings[i].Level, 0D) * weightings[i].Weight;
+            acc += perlin.perlin(x * weightings[i].Level, y * weightings[i].Level, 0f) * weightings[i].Weight;
         }
         return acc;
     }
