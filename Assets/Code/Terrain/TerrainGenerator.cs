@@ -97,6 +97,9 @@ public class TerrainGenerator : MonoBehaviour
     [SerializeField]
     private bool autoUpdate = false;
 
+    [SerializeField]
+    private bool createCollisionMesh;
+
 
     private MeshFilter meshFilter;
 
@@ -277,7 +280,10 @@ public class TerrainGenerator : MonoBehaviour
         var elapsedMs = (double)sw.ElapsedTicks / Stopwatch.Frequency * 1000D;
         UnityEngine.Debug.Log("UpdateMesh: " + elapsedMs + "ms");
 
-        UpdateCollider();
+        if (createCollisionMesh)
+        {
+            UpdateCollider();
+        }
     }
 
     private void UpdateCollider()
