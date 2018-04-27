@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Assets.Code.Terrain;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -176,17 +177,19 @@ public class TerrainGenerator : MonoBehaviour
         gameObject.isStatic = true;
     }
 
-    private static float Perlin(float x, float y, Weighting[] weightings)
+    private static float Perlin(Perlin perlin, float x, float y, Weighting[] weightings)
     {
         var acc = 0f;
         for (var i = 0; i < weightings.Length; i++)
         {
-            acc += Mathf.PerlinNoise(x * weightings[i].Level, y * weightings[i].Level) * weightings[i].Weight;
+            //acc += Mathf.PerlinNoise(x * weightings[i].Level, y * weightings[i].Level) * weightings[i].Weight;
+            acc += (float)perlin.perlin((double)x * weightings[i].Level, (double)y * weightings[i].Level, 0D) * weightings[i].Weight;
         }
         return acc;
     }
 
     private static Vector3[] GenerateVerts(
+        Perlin perlin,
         int size, 
         int posX, 
         int posY, 
@@ -203,7 +206,12 @@ public class TerrainGenerator : MonoBehaviour
                     i * scale.x / (size - 1);
 
                 v[i * size + j].y =
-                    scale.y * Perlin((float)i / (size - 1) + posX, (float)j / (size - 1) + posY, weightings);
+                    scale.y * Perlin(
+                        perlin,
+                        (float)i / (size - 1) + posX, 
+                        (float)j / (size - 1) + posY, 
+                        weightings
+                    );
 
                 v[i * size + j].z = 
                     j * scale.z / (size - 1);
@@ -255,12 +263,14 @@ public class TerrainGenerator : MonoBehaviour
     [ContextMenu("Update mesh")]
     public void UpdateMesh()
     {
+        var perlinNoiseGenerator = new Perlin();
+
         var sw = Stopwatch.StartNew();
 
         var mesh = MeshFilter.mesh = new Mesh
         {
             name = "TerrainChunk",
-            vertices = GenerateVerts(Size, posX, posY, weightings, scale),
+            vertices = GenerateVerts(perlinNoiseGenerator, Size, posX, posY, weightings, scale),
             triangles = GenerateTris(Size),
             uv = GenerateUVs(Size)
         };
@@ -271,18 +281,17 @@ public class TerrainGenerator : MonoBehaviour
         var elapsedMs = (double)sw.ElapsedTicks / Stopwatch.Frequency * 1000D;
         UnityEngine.Debug.Log("UpdateMesh: " + elapsedMs + "ms");
 
-        UpdateCollider();
-
+        UpdateCollider(perlinNoiseGenerator);
     }
 
-    private void UpdateCollider()
+    private void UpdateCollider(Perlin perlin)
     {
         var sw = Stopwatch.StartNew();
 
         var mesh = new Mesh
         {
             name = "TerrainCollider",
-            vertices = GenerateVerts(17, posX, posY, weightings, scale),
+            vertices = GenerateVerts(perlin, 17, posX, posY, weightings, scale),
             triangles = GenerateTris(17)
         };
 
