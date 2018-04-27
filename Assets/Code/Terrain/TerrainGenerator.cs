@@ -177,19 +177,18 @@ public class TerrainGenerator : MonoBehaviour
         gameObject.isStatic = true;
     }
 
-    private static float Perlin(Perlin perlin, float x, float y, Weighting[] weightings)
+    private static float OctavePerlin(float x, float y, Weighting[] weightings)
     {
         var acc = 0f;
         for (var i = 0; i < weightings.Length; i++)
         {
             //acc += Mathf.PerlinNoise(x * weightings[i].Level, y * weightings[i].Level) * weightings[i].Weight;
-            acc += perlin.perlin(x * weightings[i].Level, y * weightings[i].Level, 0f) * weightings[i].Weight;
+            acc += Perlin.perlin(x * weightings[i].Level, y * weightings[i].Level, 0f) * weightings[i].Weight;
         }
         return acc;
     }
 
     private static Vector3[] GenerateVerts(
-        Perlin perlin,
         int size, 
         int posX, 
         int posY, 
@@ -206,8 +205,7 @@ public class TerrainGenerator : MonoBehaviour
                     i * scale.x / (size - 1);
 
                 v[i * size + j].y =
-                    scale.y * Perlin(
-                        perlin,
+                    scale.y * OctavePerlin(
                         (float)i / (size - 1) + posX, 
                         (float)j / (size - 1) + posY, 
                         weightings
@@ -263,14 +261,12 @@ public class TerrainGenerator : MonoBehaviour
     [ContextMenu("Update mesh")]
     public void UpdateMesh()
     {
-        var perlinNoiseGenerator = new Perlin();
-
         var sw = Stopwatch.StartNew();
 
         var mesh = MeshFilter.mesh = new Mesh
         {
             name = "TerrainChunk",
-            vertices = GenerateVerts(perlinNoiseGenerator, Size, posX, posY, weightings, scale),
+            vertices = GenerateVerts(Size, posX, posY, weightings, scale),
             triangles = GenerateTris(Size),
             uv = GenerateUVs(Size)
         };
@@ -281,17 +277,17 @@ public class TerrainGenerator : MonoBehaviour
         var elapsedMs = (double)sw.ElapsedTicks / Stopwatch.Frequency * 1000D;
         UnityEngine.Debug.Log("UpdateMesh: " + elapsedMs + "ms");
 
-        UpdateCollider(perlinNoiseGenerator);
+        UpdateCollider();
     }
 
-    private void UpdateCollider(Perlin perlin)
+    private void UpdateCollider()
     {
         var sw = Stopwatch.StartNew();
 
         var mesh = new Mesh
         {
             name = "TerrainCollider",
-            vertices = GenerateVerts(perlin, 17, posX, posY, weightings, scale),
+            vertices = GenerateVerts(17, posX, posY, weightings, scale),
             triangles = GenerateTris(17)
         };
 

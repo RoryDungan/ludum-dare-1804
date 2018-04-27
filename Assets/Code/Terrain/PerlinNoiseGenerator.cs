@@ -3,13 +3,7 @@
     // Taken from https://gist.github.com/Flafla2/f0260a861be0ebdeef76
     public class Perlin
     { 
-        public int repeat;
-        
-        public Perlin(int repeat = -1) {
-            this.repeat = repeat;
-        }
-
-        public float OctavePerlin(float x, float y, float z, int octaves, float persistence) {
+        public static float OctavePerlin(float x, float y, float z, int octaves, float persistence) {
             float total = 0;
             float frequency = 1;
             float amplitude = 1;
@@ -50,13 +44,8 @@
             }
         }
         
-        public float perlin(float x, float y, float z) {
-            if(repeat > 0) {									// If we have any repeat on, change the coordinates to their "local" repetitions
-                x = x%repeat;
-                y = y%repeat;
-                z = z%repeat;
-            }
-            
+        public static float perlin(float x, float y, float z) 
+        { 
             int xi = (int)x & 255;								// Calculate the "unit cube" that the point asked will be located in
             int yi = (int)y & 255;								// The left bound is ( |_x_|,|_y_|,|_z_| ) and the right bound is that
             int zi = (int)z & 255;								// plus 1.  Next we calculate the location (from 0.0 to 1.0) in that cube.
@@ -66,16 +55,15 @@
             float u = fade(xf);
             float v = fade(yf);
             float w = fade(zf);
-                                                                
-            int aaa, aba, aab, abb, baa, bba, bab, bbb;
-            aaa = p[p[p[    xi ]+    yi ]+    zi ];
-            aba = p[p[p[    xi ]+inc(yi)]+    zi ];
-            aab = p[p[p[    xi ]+    yi ]+inc(zi)];
-            abb = p[p[p[    xi ]+inc(yi)]+inc(zi)];
-            baa = p[p[p[inc(xi)]+    yi ]+    zi ];
-            bba = p[p[p[inc(xi)]+inc(yi)]+    zi ];
-            bab = p[p[p[inc(xi)]+    yi ]+inc(zi)];
-            bbb = p[p[p[inc(xi)]+inc(yi)]+inc(zi)];
+
+            int aaa = p[p[p[    xi ]+    yi ]+    zi ];
+            int aba = p[p[p[    xi ]+inc(yi)]+    zi ];
+            int aab = p[p[p[    xi ]+    yi ]+inc(zi)];
+            int abb = p[p[p[    xi ]+inc(yi)]+inc(zi)];
+            int baa = p[p[p[inc(xi)]+    yi ]+    zi ];
+            int bba = p[p[p[inc(xi)]+inc(yi)]+    zi ];
+            int bab = p[p[p[inc(xi)]+    yi ]+inc(zi)];
+            int bbb = p[p[p[inc(xi)]+inc(yi)]+inc(zi)];
         
             float x1, x2, y1, y2;
             x1 = lerp(	grad (aaa, xf  , yf  , zf),				// The gradient function calculates the dot product between a pseudorandom
@@ -97,11 +85,8 @@
             return (lerp (y1, y2, w)+1)/2;						// For convenience we bound it to 0 - 1 (theoretical min/max before is -1 - 1)
         }
         
-        public int inc(int num) {
-            num++;
-            if (repeat > 0) num %= repeat;
-            
-            return num;
+        public static int inc(int num) {
+            return num + 1;
         }
         
         public static float grad(int hash, float x, float y, float z) {
